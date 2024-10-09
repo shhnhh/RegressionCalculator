@@ -19,4 +19,5 @@ def LSM(arr):
             e_j = M[:, j]
             N[i, j] = np.dot(e_i, e_j)
 
+    N.diag()
     return N.solution()
