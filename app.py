@@ -1,3 +1,10 @@
+import math
+
+functions = dict()
+for func in dir(math):
+    if func[:2] != '__':
+        functions[func] = getattr(math, func)
+
 import matplotlib
 
 matplotlib.use('TkAgg')
@@ -12,12 +19,12 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 import numpy as np
-import sympy
 import csv
 
 from LSM import LSM
 from style import Style
 from scrollbar import CustomScrollbar
+
 
 class App(Tk):
 
@@ -115,6 +122,8 @@ class App(Tk):
             ttk.Entry(self.formula, width=3).pack(side=LEFT)
             ttk.Label(self.formula, text=f'b{i}' + '+' * (i < n - 1), background='#F0F0F0').pack(side=LEFT)
 
+        ttk.Label(self.formula, text='+ ε', background='#F0F0F0').pack(side=LEFT)
+
         self.formula.update_idletasks()
         self.formula_box.config(scrollregion=self.formula_box.bbox(ALL))
 
@@ -137,8 +146,8 @@ class App(Tk):
     def draw(self):
 
         def eval_eqn(eqn, in_dict):
-            subs = {sympy.symbols(key): item for key, item in in_dict.items()}
-            ans = sympy.simplify(eqn).evalf(subs=subs)
+            functions.update(in_dict)
+            ans = eval(eqn, functions)
 
             return ans
 
