@@ -23,10 +23,14 @@ class Style(ttk.Style):
         self.theme_use('clam')
 
         self.frame()
+        self.label()
         self.scrollbar()
 
     def frame(self):
         self.configure('TFrame', background='#F0F0F0')
+
+    def label(self):
+        self.configure('TLabel', background='#F0F0F0')
 
     def scrollbar(self):
         load(images['scrollbar-arrow-left'], (15, 15), name='img_left')

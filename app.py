@@ -44,8 +44,7 @@ class App(Tk):
         self.num_of_vars.trace_add('write', self.build_formula)
 
         ttk.Label(
-            self, text='Количество неизвестных: ',
-            background='#F0F0F0'
+            self, text='Количество неизвестных: '
         ).grid(row=0, column=0, sticky=E)
 
         ttk.Spinbox(
@@ -64,7 +63,7 @@ class App(Tk):
         self.formula_box.create_window(0, 0, window=self.formula, anchor=NW)
 
         self.table = ttk.Frame(self, borderwidth=1, relief=GROOVE)
-        self.table.grid(row=3, column=0, columnspan=2, sticky=NSEW)
+        self.table.grid(row=3, column=0, columnspan=2, rowspan=2, sticky=NSEW)
 
         self.table.rowconfigure(2, weight=1)
         self.table.columnconfigure(0, weight=1)
@@ -81,11 +80,15 @@ class App(Tk):
         self.canvas = FigureCanvasTkAgg(self.figure, self)
         self.canvas.get_tk_widget().grid(row=3, column=3, sticky=NSEW)
 
-        self.text = ttk.Label(self, background='#F0F0F0', text=f'''RSS = ? 
-                                                                 \rTSS = ?
-                                                                 \rESS = ?
-                                                                 \rR² = ? ''')
-        self.text.grid(row=0, column=3, rowspan=3, sticky=NSEW)
+        toolbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)
+        toolbar.update()
+        toolbar.grid(row=4, column=3, sticky=EW)
+
+        self.text = ttk.Label(self, text=f'''RSS = ? 
+                                           \rTSS = ?
+                                           \rESS = ?
+                                           \rR² = ? ''')
+        self.text.grid(row=0, column=3, rowspan=2, sticky=NSEW, pady=5)
 
         self.plot = self.figure.add_subplot()
 
@@ -117,20 +120,20 @@ class App(Tk):
         for widget in self.formula.winfo_children():
             widget.destroy()
 
-        ttk.Label(self.formula, text='y=', background='#F0F0F0').pack(side=LEFT)
+        ttk.Label(self.formula, text=' y=').pack(side=LEFT)
         for i in range(n):
             ttk.Entry(self.formula, width=3).pack(side=LEFT)
-            ttk.Label(self.formula, text=f'b{i}' + '+' * (i < n - 1), background='#F0F0F0').pack(side=LEFT)
+            ttk.Label(self.formula, text=f'b{i}' + '+' * (i < n - 1)).pack(side=LEFT)
 
-        ttk.Label(self.formula, text='+ ε', background='#F0F0F0').pack(side=LEFT)
+        ttk.Label(self.formula, text='+ ε').pack(side=LEFT)
 
         self.formula.update_idletasks()
         self.formula_box.config(scrollregion=self.formula_box.bbox(ALL))
 
     def build_table(self):
-        ttk.Label(self.table, text='X', background='#F0F0F0').grid(row=0, column=0)
+        ttk.Label(self.table, text='X').grid(row=0, column=0)
         ttk.Separator(self.table, orient=VERTICAL).grid(row=0, column=1, sticky=NS)
-        ttk.Label(self.table, text='Y', background='#F0F0F0').grid(row=0, column=2)
+        ttk.Label(self.table, text='Y').grid(row=0, column=2)
 
         ttk.Separator(self.table, orient=HORIZONTAL
         ).grid(row=1,column=0, columnspan=3, sticky=EW)
