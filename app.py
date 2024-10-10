@@ -10,8 +10,10 @@ from matplotlib.backends.backend_tkagg import (
 
 from tkinter import *
 from tkinter import ttk
+from tkinter import filedialog
 import numpy as np
 import sympy
+import csv
 
 from LSM import LSM
 from style import Style
@@ -61,8 +63,12 @@ class App(Tk):
         self.table.columnconfigure(0, weight=1)
         self.table.columnconfigure(2, weight=1)
 
-        ttk.Button(self, text='Построить', command=self.draw
-        ).grid(row=3, column=2, padx=10, pady=10)
+        btns = ttk.Frame(self)
+
+        ttk.Button(btns, text='Загрузить', command=self.load_from_file).pack(side=TOP, pady=5)
+        ttk.Button(btns, text='Построить', command=self.draw).pack(side=BOTTOM, pady=5)
+                   
+        btns.grid(row=3, column=2, padx=10, pady=10)
 
         self.figure = Figure(figsize=(6, 4), dpi=100)
         self.canvas = FigureCanvasTkAgg(self.figure, self)
@@ -78,6 +84,25 @@ class App(Tk):
 
         self.num_of_vars.set(2)
         self.build_table()
+
+    def load_from_file(self):
+        file = filedialog.askopenfile('r', filetypes=(('text files', '*.csv'),))
+
+        if file is None:
+            return
+
+        self.X.delete('1.0', END)
+        self.Y.delete('1.0', END)
+
+        file.readline()
+        csv_file = csv.reader(file)
+        
+        for line in csv_file:
+            x, y = line
+            self.X.insert(END, x + '\n')
+            self.Y.insert(END, y + '\n')
+
+        file.close()
 
     def build_formula(self, *args):
         n = int(self.num_of_vars.get())
@@ -161,7 +186,7 @@ class App(Tk):
             coef['x'] = i
             y.append(eval_eqn(formula, coef))
 
-        self.plot.plot(x, y)
+        self.plot.plot(x, y, color='red')
 
         RSS = 0
         TSS = 0
