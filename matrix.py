@@ -54,9 +54,7 @@ class Matrix:
 
         res = []
         for i in range(self.rows):
-            for j in range(self.cols - 1):
-                if self.data[i, j] != 0:
-                    x_i = self.data[i, -1] / self.data[i, j]
-                    res.append(x_i)
+            x_i = self.data[i, -1] / self.data[i, i]
+            res.append(x_i)
 
         return res
